@@ -11,7 +11,7 @@ function fits(current, storage) {
     var url1 = parseUri(current);
     var url2 = parseUri(storage);
 	
-    if (storage === '*') {
+    if (storage === '*' || value === '*') {
         return true;
 		
     } else if (value === FILTER_BY_DOMAIN) {

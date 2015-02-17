@@ -97,7 +97,6 @@ function renderAdditionalInfo(sets) {
         var row = table.find('tr[data-key=' + set.key + ']');
         var substrHref = set.url.length > 40 ? set.url.substring(0, 40) + '...' : set.url;
         row.append('<td class="url"><a target="_blank" href="' + set.url + '">' + substrHref + '</a></td>');
-        row.find('td.restore').addClass('disabled').find('i').remove();
     }
 }
 
@@ -123,9 +122,10 @@ function sendMessage(obj, callback) {
 function setCurrentFilter() {
     var value = localStorage.getItem('filter');
     
-    if (!value) {
-        localStorage.setItem('filter', FILTER_BY_FULL);
-        value = FILTER_BY_FULL;
+    if (!value || value == '*') {
+        localStorage.setItem('filter', '*');
+        $('a.filter i').remove();
+        return;
     }
 
     var link = $('a.filter[id=' + value + ']');
@@ -158,6 +158,8 @@ $(document).ready(function () {
     
     $("#viewSets").click(function () {
         $('#sets').addClass('allsets');
+        $('a.filter i').remove();
+        localStorage.setItem('filter', '*');
         refreshSetsList();
     });
 
@@ -254,7 +256,7 @@ $(document).ready(function () {
         $('div.block').hide();
     });
 
-    sets.on("click", 'td.restore:not(.disabled)', function (event) {
+    sets.on("click", 'td.restore', function (event) {
         var key = $(this).parents('tr').data('key');
         var setSettings = JSON.parse(localStorage.getItem(key));
 
